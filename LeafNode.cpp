@@ -46,11 +46,12 @@ LeafNode* LeafNode::insert(int value)
   	//SPLIT
   	cout << "SPLIT" << endl;
   	
+	//make method
   	//Check if can borrow from left sibling
   	if(leftSibling != NULL){
   	
   		
-  	
+  	//make method
   	//Check if can borrow from right sibling
   	}else if(rightSibling != NULL){
   		
