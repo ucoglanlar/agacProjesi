@@ -6,6 +6,9 @@
 
 using namespace std;
 
+bool insertLeftSibling(int value);
+bool insertRightSibling(int value);
+
 LeafNode::LeafNode(int LSize, InternalNode *p,
   BTreeNode *left, BTreeNode *right) : BTreeNode(LSize, p, left, right)
 {
@@ -41,15 +44,27 @@ LeafNode* LeafNode::insert(int value)
   //Leaf is full, so SPLIT
   }else if(count == leafSize){
   	
+  	//SPLIT
+  	cout << "SPLIT" << endl;
+
+	//checks if value can be inserted in left sibling
+	bool canInsertLeft = true;
+
+	//checks if value can be inserted in right sibling
+	bool canInsertRight = true;
+  	
+	//make method
+    
   	//Check if can borrow from left sibling
   	if(leftSibling != NULL){
   	
+	canInsertLeft = insertLeftSibling(value);
   		
   	
   	//Check if can borrow from right sibling
   	}else if(rightSibling != NULL){
   		
-  		
+  	canInsertRight = insertRightSibling(value);	
   	
   	}
   	
@@ -173,4 +188,64 @@ void LeafNode::insertSortedArray(int* array, int value, int numElements){
   	}
 	
 } // LeafNode::insertSortedArray()
+
+
+
+/*	Inserts value into left sibling if left sibling is not null
+*	Method assumes the left sibling of current node is not null
+*	value is inserted in a sorted manner into the values[] of left sibling
+*	returns true if value was inserted successfully
+*	returns false if left sibling's values[] is full
+*
+*/
+bool LeafNode::insertLeftSibling(int value){
+
+	//returns true if insertion successfull
+
+
+	//check if values[] is full in leftSibling
+	if(leftSibling->getCount() == leafSize){
+		
+		//values[] in leftSibling is full, so returns false
+		return false;
+	} else{
+		
+		//leftSibling has room, inserts value in leftSibling in sorted order
+		leftSibling->insert(value);
+
+	
+	}
+
+	
+	return true;
+}
+
+/*	Inserts value into right sibling if right sibling is not null
+*	Method assumes the right sibling of current node is not null
+*	value is inserted in a sorted manner into the values[] of right sibling
+*	returns true if value was inserted successfully
+*	returns false if right sibling's values[] is full
+*
+*/
+bool LeafNode::insertRightSibling(int value){
+
+	//returns true if insertion successfull
+
+
+	//check if values[] is full in rightSibling
+	if(rightSibling->getCount() == leafSize){
+		
+		//values[] in rightSibling is full, so returns false
+		return false;
+	} else{
+		
+		//rightSibling has room, inserts value in rightSibling in sorted order
+		rightSibling->insert(value);
+
+	
+	}
+
+	
+	return true;
+}
 
