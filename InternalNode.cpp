@@ -73,13 +73,14 @@ BTreeNode* InternalNode::find(int value, BTreeNode* start){
 	//if start is an internal Node
 	if(ip != 0){
 
+		int currentSize = ip->getCount(); 
+
 		//if there is only one child in internal node, must traverse the child
 		if(currentSize == 1){
 			return find(value, children[0]);
 		}
 		
-		//check if value is larger than the largest key
-		int currentSize = ip->getCount(); 		
+		//check if value is larger than the largest key		
 		if(value >= ip->keys[currentSize - 1]){
 			return find(value, children[currentSize - 1]);
 		}
