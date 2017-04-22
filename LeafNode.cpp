@@ -43,7 +43,7 @@ LeafNode* LeafNode::insert(int value)
   	
   	return NULL;
   	
-  //Leaf is full, so SPLIT
+  //Leaf is full, attempt adoption first. If not working then SPLIT
   }else if(count == leafSize){
   	
   	//SPLIT
@@ -60,6 +60,8 @@ LeafNode* LeafNode::insert(int value)
   	if(leftSibling != NULL){
   	
 	canInsertLeft = insertLeftSibling(value);
+	
+	
   		
   	//make method
   	//Check if can borrow from right sibling
@@ -187,50 +189,89 @@ int insertSortedArray(int* array, int value, int numElements){
 */
 bool LeafNode::insertLeftSibling(int value){
 
+	//casts leftSibling to LeafNode
+	LeafNode* leftLeaf = (LeafNode*)leftSibling;
 
+	//current count of leftLeaf
+	int currentCount = leftLeaf->count;
 
-	//check if values[] is full in leftSibling
-	if(leftSibling->getCount() == leafSize){
+	//check if values[] is full in leftLeaf
+	if(currentCount == leafSize){
 		
 		//values[] in leftSibling is full, returns false
 		return false;
 	} else{
 		
-		//inserts value in leftSibling
-		leftSibling->insert(value);
+		//temp array
+		int* temp = new int[currentCount + 1];
 
-	
+		//copy over values in leftLeaf to temp[]
+		for(int i = 0; i < currentCount; i++){
+
+			temp[i] = leftLeaf->values[i];
+		}
+
+		//inserts value in temp[]
+		insertSortedArray(temp, value, currentCount);
+
+		//insert smallest value to left
+		leftLeaf->insert(temp[0]);
+
+		//delete smallest value in temp 
+		this->deleteKey(temp[0]);
+
 	}
 
 	
 	return true;
 }
 
+
 /*	Inserts value into right sibling if right sibling is not null
 *	Method assumes the right sibling of current Leafnode is not null
-*	returns true if value was inserted successfully
+*	returns true if value was inserted
 *	returns false if right sibling's values[] is full
 *
 */
 bool LeafNode::insertRightSibling(int value){
 
+	//casts rightSibling to LeafNode
+	LeafNode* rightLeaf = (LeafNode*)rightSibling;
 
+	//current count of leftLeaf
+	int currentCount = rightLeaf->count;
 
-	//check if values[] is full in rightSibling
-	if(rightSibling->getCount() == leafSize){
+	//check if values[] is full in leftLeaf
+	if(currentCount == leafSize){
 		
 		//values[] in rightSibling is full, returns false
 		return false;
 	} else{
 		
-		//inserts value in rightSibling
-		rightSibling->insert(value);
+		//temp array
+		int* temp = new int[currentCount + 1];
 
-	
+		//copy over values in leftLeaf to temp[]
+		for(int i = 0; i < currentCount; i++){
+
+			temp[i] = rightLeaf->values[i];
+		}
+
+		//inserts value in temp[]
+		insertSortedArray(temp, value, currentCount);
+
+		//insert largest value to right
+		rightLeaf->insert(temp[currentCount]);
+
+		//delete largest value in temp 
+		this->deleteKey(temp[currentCount]);
+
 	}
 
 	
 	return true;
+
+
 }
 
 /* erases given key
