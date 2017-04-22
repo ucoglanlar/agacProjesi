@@ -6,8 +6,10 @@
 
 using namespace std;
 
+int insertSortedArray(int* array, int value, int numElements);
 bool insertLeftSibling(int value);
 bool insertRightSibling(int value);
+void deleteKey(int value);
 
 LeafNode::LeafNode(int LSize, InternalNode *p,
   BTreeNode *left, BTreeNode *right) : BTreeNode(LSize, p, left, right)
@@ -54,13 +56,12 @@ LeafNode* LeafNode::insert(int value)
 	bool canInsertRight = true;
   	
 	//make method
-    
   	//Check if can borrow from left sibling
   	if(leftSibling != NULL){
   	
 	canInsertLeft = insertLeftSibling(value);
   		
-  	
+  	//make method
   	//Check if can borrow from right sibling
   	}else if(rightSibling != NULL){
   		
@@ -68,12 +69,10 @@ LeafNode* LeafNode::insert(int value)
   	
   	}
   	
-  	//If not, split
-  	cout << "SPLIT" << endl;
   	
   	//Sean's Rule: Right side has more elements than the left side
   	//All leaves need to be AT LEAST half full
-  	int leftSize = ceil(leafSize / 2.0);
+  	int leftSize = (leafSize / 2) + 1;
   	int rightSize = (leafSize + 1) - leftSize;
   	
   	cout << "Left #: " << leftSize << endl;
@@ -88,7 +87,7 @@ LeafNode* LeafNode::insert(int value)
   	}
   	
   	//Insert new value into temp array
-  	insertSortedArray(temp, value, leafSize);
+  	insertSortedArray(temp, value, count+1);
   	
   	//Create new leaf node and set left sibling to be the current leaf node
   	LeafNode newLeaf(leafSize, parent, this, NULL);
@@ -96,28 +95,21 @@ LeafNode* LeafNode::insert(int value)
   	//Set right sibling of current leaf node to new leaf node
   	rightSibling = &newLeaf;
   	
-  	//Reset count to number of elements after split
-  	count = leftSize;
-  	
   	//Set the now empty parts of current leaf node to 0
   	for(int i = leftSize; i < leafSize; i++){
   		values[i] = 0;
   	}
   	
+  	//Reset count to number of elements after split
+  	count = leftSize;
+  	
+  	
   	//Fill new leaf node with values greater than the current leaf node
   	//Sean's Rule
   	for(int i = leftSize; i < leafSize+1; i++){
   		newLeaf.insert(temp[i]);
-  		
   	}
   	
-  	cout << "Old Leaf Node: ";
-  	
-  	for(int i = 0 ; i < count; i++){
-  		cout << values[i] << " ";
-  	}
-  	cout << endl;
-  	  	
   	cout << "New Leaf Node: ";
   	
   	for(int i = 0 ; i < newLeaf.count; i++){
@@ -125,13 +117,7 @@ LeafNode* LeafNode::insert(int value)
   	}
   	cout << endl;
   	
-  	//If parent exists, set value to minimum
-  	if(parent != NULL){
-  		
-  	}
-  	
-  	//Return newly created leaf node
-  	return (LeafNode*)rightSibling;
+  	return NULL;
   	
   //Leaf has at least one value and at most leafSize - 1 values (0, leafSize)	
   }else{
@@ -157,11 +143,12 @@ void LeafNode::print(Queue <BTreeNode*> &queue)
 /*
 *	Inserts value into an array in a sorted manner, from least to greatest, and returns the index position where the value was inserted
 *	Modifies given array, with the new value inserted
-*	@array: the int array to insert into. Modified in the function
+*	@array: the int array to insert into
 *	@value: the value to insert
-*	@numElements: the current amount of elements in the array, before number is inserted
+*	@numElements: the current amount of elements in the array
+*	@return: the position in the array the value was inserted
 */
-void LeafNode::insertSortedArray(int* array, int value, int numElements){
+int insertSortedArray(int* array, int value, int numElements){
 
 	//Add new value in sorted order. Least to Greatest
   	for(int i = 0; i < numElements; i++){
@@ -187,30 +174,29 @@ void LeafNode::insertSortedArray(int* array, int value, int numElements){
   	
   	}
 	
-} // LeafNode::insertSortedArray()
+} // LeafNode::insertSortedArray() 
+
 
 
 
 /*	Inserts value into left sibling if left sibling is not null
-*	Method assumes the left sibling of current node is not null
-*	value is inserted in a sorted manner into the values[] of left sibling
-*	returns true if value was inserted successfully
+*	Method assumes the left sibling of current Leafnode is not null
+*	returns true if value was inserted
 *	returns false if left sibling's values[] is full
 *
 */
 bool LeafNode::insertLeftSibling(int value){
 
-	//returns true if insertion successfull
 
 
 	//check if values[] is full in leftSibling
 	if(leftSibling->getCount() == leafSize){
 		
-		//values[] in leftSibling is full, so returns false
+		//values[] in leftSibling is full, returns false
 		return false;
 	} else{
 		
-		//leftSibling has room, inserts value in leftSibling in sorted order
+		//inserts value in leftSibling
 		leftSibling->insert(value);
 
 	
@@ -221,25 +207,23 @@ bool LeafNode::insertLeftSibling(int value){
 }
 
 /*	Inserts value into right sibling if right sibling is not null
-*	Method assumes the right sibling of current node is not null
-*	value is inserted in a sorted manner into the values[] of right sibling
+*	Method assumes the right sibling of current Leafnode is not null
 *	returns true if value was inserted successfully
 *	returns false if right sibling's values[] is full
 *
 */
 bool LeafNode::insertRightSibling(int value){
 
-	//returns true if insertion successfull
 
 
 	//check if values[] is full in rightSibling
 	if(rightSibling->getCount() == leafSize){
 		
-		//values[] in rightSibling is full, so returns false
+		//values[] in rightSibling is full, returns false
 		return false;
 	} else{
 		
-		//rightSibling has room, inserts value in rightSibling in sorted order
+		//inserts value in rightSibling
 		rightSibling->insert(value);
 
 	
@@ -248,4 +232,45 @@ bool LeafNode::insertRightSibling(int value){
 	
 	return true;
 }
+
+/* erases given key
+*  intended to be used for adoption
+*/
+void LeafNode::deleteKey(int value){
+
+	//index of value
+	int index = -1;
+
+	//find index of the value
+	for(int i = 0; i < count; i++){
+
+		if(values[i] == value){
+			index = i;
+		}
+	}
+
+	//index is not found, exits function
+	if(index == -1){
+		return;
+	}
+
+	//found index of value
+	//shift values from index until the count to the left by 1
+	for(int j = index; j < count; j++){
+
+		//j is at the last index in values[], exits loop to avoid out of bounds error
+		if( j == count - 1){
+			break;
+		}
+		
+		//shift elements to the left by 1
+		values[j] = values[j + 1]; 
+	}
+
+	//decrement count by 1
+	count = count - 1;
+}
+
+
+
 
