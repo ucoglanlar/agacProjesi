@@ -44,6 +44,9 @@ void InternalNode::insert(BTreeNode *newNode) // from a sibling
   
 } // InternalNode::insert()
 
+
+ 
+
 void InternalNode::print(Queue <BTreeNode*> &queue)
 {
   int i;
@@ -58,4 +61,49 @@ void InternalNode::print(Queue <BTreeNode*> &queue)
 
 } // InternalNode::print()
 
+
+/* find returns a pointer to the correct LeafNode where the int value should be inserted
+*  returns a BTreeNode pointer to the LeafNode
+*
+*/
+BTreeNode* InternalNode::find(int value, BTreeNode* start){
+
+	InternalNode* ip = dynamic_cast<InternalNode*>(start); 
+
+	
+	
+	//if start is an internal Node
+	if(ip != 0){
+		
+		//check if value is larger than the largest key
+//		int currentSize = start->getCount();
+
+//		InternalNode* ip = (InternalNode*)start;
+		int currentSize = ip->getCount(); 		
+		if(value >= ip->keys[currentSize - 1]){
+			return find(value, children[currentSize - 1]);
+		}
+
+		//traverse through the keys in internal node
+		for(int i = 1; i < currentSize; i++){
+			int temp = keys[i];
+
+			//if temp key is greater than or equal to value, traverse child linked to left side of the key
+			//keys in internal node are in increasing order
+			if(value <= temp){
+				return find(value, children[i - 1]);
+			}
+		}
+
+	}
+	//start is the LeafNode
+	else{
+
+		return start;
+
+	}
+
+	
+
+}
 
