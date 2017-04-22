@@ -6,8 +6,6 @@
 
 using namespace std;
 
-int insertSortedArray(int* array, int value, int numElements);
-
 LeafNode::LeafNode(int LSize, InternalNode *p,
   BTreeNode *left, BTreeNode *right) : BTreeNode(LSize, p, left, right)
 {
@@ -97,6 +95,13 @@ LeafNode* LeafNode::insert(int value)
   		newLeaf.insert(temp[i]);
   		
   	}
+  	
+  	cout << "Old Leaf Node: ";
+  	
+  	for(int i = 0 ; i < count; i++){
+  		cout << values[i] << " ";
+  	}
+  	cout << endl;
   	  	
   	cout << "New Leaf Node: ";
   	
@@ -105,6 +110,12 @@ LeafNode* LeafNode::insert(int value)
   	}
   	cout << endl;
   	
+  	//If parent exists, set value to minimum
+  	if(parent != NULL){
+  		
+  	}
+  	
+  	//Return newly created leaf node
   	return (LeafNode*)rightSibling;
   	
   //Leaf has at least one value and at most leafSize - 1 values (0, leafSize)	
@@ -134,9 +145,8 @@ void LeafNode::print(Queue <BTreeNode*> &queue)
 *	@array: the int array to insert into. Modified in the function
 *	@value: the value to insert
 *	@numElements: the current amount of elements in the array, before number is inserted
-*	@return: the position in the array the value was inserted
 */
-int insertSortedArray(int* array, int value, int numElements){
+void LeafNode::insertSortedArray(int* array, int value, int numElements){
 
 	//Add new value in sorted order. Least to Greatest
   	for(int i = 0; i < numElements; i++){
@@ -162,6 +172,5 @@ int insertSortedArray(int* array, int value, int numElements){
   	
   	}
 	
-} // LeafNode::insertSortedArray() 
-
+} // LeafNode::insertSortedArray()
 

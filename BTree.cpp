@@ -21,9 +21,12 @@ void BTree::insert(const int value)
 		
 		cout << "Root split" << endl;
 	
-		InternalNode* newRoot = new InternalNode(internalSize, leafSize, NULL, NULL, NULL);
-		newRoot->insert(result, newRoot);	
+		InternalNode* newRoot = new InternalNode(internalSize, leafSize, NULL, NULL, NULL);	
+		//newRoot->insert(root, newRoot);
+		
+		//Set old root to be equal to the new root
 		root = newRoot;
+	
 	}
 
 } // BTree::insert()
