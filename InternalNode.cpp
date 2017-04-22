@@ -70,20 +70,20 @@ BTreeNode* InternalNode::find(int value, BTreeNode* start){
 
 	InternalNode* ip = dynamic_cast<InternalNode*>(start); 
 
-	
-	
 	//if start is an internal Node
 	if(ip != 0){
+
+		//if there is only one child in internal node, must traverse the child
+		if(currentSize == 1){
+			return find(value, children[0]);
+		}
 		
 		//check if value is larger than the largest key
-//		int currentSize = start->getCount();
-
-//		InternalNode* ip = (InternalNode*)start;
 		int currentSize = ip->getCount(); 		
 		if(value >= ip->keys[currentSize - 1]){
 			return find(value, children[currentSize - 1]);
 		}
-
+ 
 		//traverse through the keys in internal node
 		for(int i = 1; i < currentSize; i++){
 			int temp = keys[i];
