@@ -123,8 +123,24 @@ LeafNode* LeafNode::insert(int value)
   		temp[i] = values[i];
   	}
   	
+  	/*
+  	cout << "Temp before: ";
+  	for(int i = 0; i < count; i++){
+  		cout << temp[i] << " ";
+  	}
+  	cout << endl;
+  	*/
+  	
   	//Insert new value into temp array
   	insertSortedArray(temp, value, count);
+  	
+  	/*
+  	cout << "Temp after: ";
+  	for(int i = 0; i < count+1; i++){
+  		cout << temp[i] << " ";
+  	}
+  	cout << endl;
+  	*/
   	
   	//Create new leaf node pointer and set left sibling to be the current leaf node
   	LeafNode* newLeaf = new LeafNode(leafSize, parent, this, NULL);
@@ -145,6 +161,9 @@ LeafNode* LeafNode::insert(int value)
   	//Reset count to number of elements after split
   	count = leftSize;
   	
+  	for(int i = 0; i < count; i++){
+  		values[i] = temp[i];
+  	}
   	
   	
   	//Fill new leaf node with values greater than the current leaf node
@@ -235,6 +254,7 @@ void LeafNode::insertSortedArray(int* array, int value, int numElements){
   		 
   			//insert value	
   			array[i] = value;
+  			
   			break;
   		
   		//Inserted value is the largest value if at last iteration
