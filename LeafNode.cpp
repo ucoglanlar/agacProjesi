@@ -6,7 +6,7 @@
 
 using namespace std;
 
-int insertSortedArray(int* array, int value, int numElements);
+void insertSortedArray(int* array, int value, int numElements);
 bool insertLeftSibling(int value);
 bool insertRightSibling(int value);
 void deleteKey(int value);
@@ -59,22 +59,30 @@ LeafNode* LeafNode::insert(int value)
   	//Check if can borrow from left sibling
   	if(leftSibling != NULL){
   	
-	canInsertLeft = insertLeftSibling(value);
-	
+		canInsertLeft = insertLeftSibling(value);
+		
+		if(canInsertLeft){
+			return NULL;
+		}
 	
   		
   	//make method
   	//Check if can borrow from right sibling
   	}else if(rightSibling != NULL){
   		
-  	canInsertRight = insertRightSibling(value);	
+  		canInsertRight = insertRightSibling(value);	
+  	
+  		if(canInsertRight){
+			return NULL;
+		}
   	
   	}
   	
+  	cout << "no adoption" << endl;
   	
   	//Sean's Rule: Right side has more elements than the left side
   	//All leaves need to be AT LEAST half full
-  	int leftSize = (leafSize / 2) + 1;
+  	int leftSize = ceil(leafSize / 2.0);
   	int rightSize = (leafSize + 1) - leftSize;
   	
   	cout << "Left #: " << leftSize << endl;
@@ -89,13 +97,18 @@ LeafNode* LeafNode::insert(int value)
   	}
   	
   	//Insert new value into temp array
-  	insertSortedArray(temp, value, count+1);
+  	insertSortedArray(temp, value, count);
   	
-  	//Create new leaf node and set left sibling to be the current leaf node
-  	LeafNode newLeaf(leafSize, parent, this, NULL);
+  	//Create new leaf node pointer and set left sibling to be the current leaf node
+  	LeafNode* newLeaf = new LeafNode(leafSize, parent, this, NULL);
+  	
+  	//cout << "New Leaf Created" << endl;
   	
   	//Set right sibling of current leaf node to new leaf node
-  	rightSibling = &newLeaf;
+  	rightSibling = newLeaf;
+  	
+  	//Set left sibling of new leaf node to current leaf node
+  	newLeaf->setLeftSibling(this);
   	
   	//Set the now empty parts of current leaf node to 0
   	for(int i = leftSize; i < leafSize; i++){
@@ -106,20 +119,36 @@ LeafNode* LeafNode::insert(int value)
   	count = leftSize;
   	
   	
+  	
   	//Fill new leaf node with values greater than the current leaf node
   	//Sean's Rule
   	for(int i = leftSize; i < leafSize+1; i++){
-  		newLeaf.insert(temp[i]);
+  		newLeaf->insert(temp[i]);
   	}
   	
-  	cout << "New Leaf Node: ";
+  	cout << "Old Leaf Node: ";
   	
-  	for(int i = 0 ; i < newLeaf.count; i++){
-  		cout << newLeaf.values[i] << " ";
+  	for(int i = 0 ; i < count; i++){
+  		cout << values[i] << " ";
   	}
   	cout << endl;
   	
-  	return NULL;
+  	cout << "New Leaf Node: ";
+  	
+  	for(int i = 0 ; i < newLeaf->count; i++){
+  		cout << newLeaf->values[i] << " ";
+  	}
+  	cout << endl;
+  	
+  	cout << "New Leaf count: " << newLeaf->getCount() << endl;
+  	
+  	//if it has a parent insert its minimum to parent
+  	if(parent != NULL){
+  		parent->insert(this);
+  		parent->insert(newLeaf);
+  	}
+  	
+  	return newLeaf;
   	
   //Leaf has at least one value and at most leafSize - 1 values (0, leafSize)	
   }else{
@@ -127,6 +156,12 @@ LeafNode* LeafNode::insert(int value)
   	insertSortedArray(values, value, count);
   	
   	count++;
+  	
+  	//if it has a parent insert its minimum to parent
+  	if(parent != NULL){
+  		parent->insert(this);
+  		
+  	}
   	
   	return NULL;
   }
@@ -150,7 +185,7 @@ void LeafNode::print(Queue <BTreeNode*> &queue)
 *	@numElements: the current amount of elements in the array
 *	@return: the position in the array the value was inserted
 */
-int insertSortedArray(int* array, int value, int numElements){
+void LeafNode::insertSortedArray(int* array, int value, int numElements){
 
 	//Add new value in sorted order. Least to Greatest
   	for(int i = 0; i < numElements; i++){
@@ -311,7 +346,4 @@ void LeafNode::deleteKey(int value){
 	//decrement count by 1
 	count = count - 1;
 }
-
-
-
 
