@@ -8,7 +8,11 @@ class InternalNode:public BTreeNode
   int internalSize;
   BTreeNode **children;
   int *keys;
+  
 public:
+  
+  static BTreeNode* newRoot;
+  
   InternalNode(int ISize, int LSize, InternalNode *p,
     BTreeNode *left, BTreeNode *right);
   int getMinimum()const;

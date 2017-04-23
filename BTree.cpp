@@ -5,6 +5,8 @@
 #include "InternalNode.h"
 using namespace std;
 
+BTreeNode* InternalNode::newRoot = NULL;
+
 BTree::BTree(int ISize, int LSize):internalSize(ISize), leafSize(LSize)
 {
   root = new LeafNode(LSize, NULL, NULL, NULL);
@@ -14,23 +16,32 @@ BTree::BTree(int ISize, int LSize):internalSize(ISize), leafSize(LSize)
 void BTree::insert(const int value)
 {
   // students must write this
+  
 	BTreeNode* result;
 	BTreeNode* leaf;
 	LeafNode* rootLeaf = dynamic_cast<LeafNode*>(root);
 	InternalNode* rootInternal = dynamic_cast<InternalNode*>(root);
 	
+	rootInternal->newRoot = 0;
+	
 	//Root is a leaf, insert to leaf
 	if(rootLeaf != 0){
 		
-		cout << "Root is leaf" << endl;
+		//cout << "Root is leaf" << endl;
 		result = rootLeaf->insert(value);
 		
 	
 	//Root is a internal node, 
 	}else{
-		cout << "Root is internal" << endl;
+		//cout << "Root is internal" << endl;
 		leaf = rootInternal->find(value, root);
 		result = leaf->insert(value);
+		
+		result = rootInternal->newRoot;
+		
+		 
+		
+		//cout << "New Root: " << rootInternal->newRoot << endl;
 	}
 	
 	
@@ -40,7 +51,11 @@ void BTree::insert(const int value)
 	
 		InternalNode* newRoot = new InternalNode(internalSize, leafSize, NULL, NULL, NULL);	
 		
-		cout << endl << "Root split" << endl;
+		//cout << endl << "Root split" << endl;
+		
+		//cout << "Root count: " << root->getCount() << endl;
+		//cout << "Result count: " << result->getCount() << endl;
+		
 		newRoot->insert(root, result);	
 	
 		
