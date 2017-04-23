@@ -26,6 +26,7 @@ InternalNode* InternalNode::insert(int value)
   // students must write this
   
   
+  
   return NULL; // to avoid warnings for now.
 } // InternalNode::insert()
 
@@ -33,11 +34,24 @@ void InternalNode::insert(BTreeNode *oldRoot, BTreeNode *node2)
 { // Node must be the root, and node1
   // students must write this
  
-  	cout << "B" << endl;
-	insert(oldRoot);
-	cout << "C" << endl;
-	insert(node2);
-  
+ 	//cout << "Special insert" << endl;
+ 
+  	keys[0] = oldRoot->getMinimum();
+  	children[0] = oldRoot;
+  	count++;
+  	oldRoot->setParent(this);
+  	
+  	//cout << "Left done" << endl;
+  	
+  	//cout << "Node2 count: " << node2->getCount() << endl;
+  	
+  	keys[1] = node2->getMinimum();
+  	cout << "After minimum" << endl;
+  	children[1] = node2;
+  	count++; 
+  	node2->setParent(this);
+  	
+  	//cout << "Right done" << endl;
   
   
 } // InternalNode::insert()
@@ -46,28 +60,21 @@ void InternalNode::insert(BTreeNode *newNode) // from a sibling
 {
 	// students may write this
 	
-	cout << "D" << endl;
-	
-	if(count < internalSize){
-		
-		newNode->setParent(this);
-		cout << "\tE" << endl;
-  		children[count] = newNode;
-  		cout << "\tF" << endl;
-  		keys[count] = newNode->getMinimum();
-  		cout << "\tG" << endl;
-  		
-  		cout << "\tCount: " << count+1 << endl;
-  		cout << "\tKey: " << keys[count] << endl;
-  		
-  		count++;
-		
-		
-		
-	}
-	
+	int minKey = newNode->getMinimum(); 
+  	bool alreadyChild = false;
+  	//try to update key if already a child
+  	for(int i = 0; i < count; i++){
   	
-  
+  		if(newNode == children[i]){
+  			keys[i] = minKey;
+  			alreadyChild = true;
+  		}
+  	}
+  	
+  	if(!alreadyChild){
+  	
+  		insert(minKey);
+  	}
 } // InternalNode::insert()
 
 
@@ -130,7 +137,6 @@ BTreeNode* InternalNode::find(int value, BTreeNode* start){
 
 	}
 
-	
+	return start;	
 
 }
-
