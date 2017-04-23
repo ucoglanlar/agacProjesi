@@ -206,17 +206,16 @@ void InternalNode::insert(BTreeNode *newNode) // from a sibling
   			//Set left sibling of new leaf node to current leaf node
   			newInternal->setLeftSibling(this);
   	
-  			
-  			//Set the now empty parts of current internal node to 0
-  			for(int i = leftSize; i < internalSize; i++){
-  				keys[i] = 0;
-  				children[i] = NULL;
-  			}
-  	
   			//Reset count to number of elements after split
   			count = leftSize;
+  			
+  			//Copy content to the existing (left) node
+  			for(int i = 0; i < count; i++){
+  				keys[i] = tempKeys[i];
+  				children[i] = tempChildren[i];
+  			}
   	
-  	
+  			
   			//Fill new internal node with values greater than the current internal node
   			//Sean's Rule
   			for(int i = leftSize; i < internalSize+1; i++){
@@ -263,34 +262,44 @@ void InternalNode::insert(BTreeNode *newNode) // from a sibling
   				newRoot = newInternal;
   			}
   	
-  	        // Set siblings. Think about right siblings
-  			for(int i = 0; i < newInternal->getCount(); i++){
-  			
+  	        // Set Left sibling.
+  			for(int i = 0; i < newInternal->getCount(); i++){			
   				BTreeNode* child = newInternal->children[i];
   				if(i == 0){
-  					child->setLeftSibling(NULL);
+  					//child->setLeftSibling(NULL);
   				} else{
-  				
-  					child->setLeftSibling(newInternal->children[i - 1]);
-					  				
-  				}
-  				
-  				
+  					child->setLeftSibling(newInternal->children[i - 1]);				  		
+  				}	
   			}
-  			
-  			for(int i = 0; i < count; i++){
-  				
+  			for(int i = 0; i < count; i++){  				
   				BTreeNode* child = children[i];
   				if(i == 0){
-  					child->setLeftSibling(NULL);
-  				} else{
-  				
-  					child->setLeftSibling(children[i - 1]);
-					  				
-  				}
-  			
+  					//child->setLeftSibling(NULL);
+  				} else{  				
+  					child->setLeftSibling(children[i - 1]);				  				
+  				}			
   			}
   			
+  	        // Set Right sibling.
+  			for(int i = 1; i < newInternal->getCount()+1; i++){			
+  				BTreeNode* child = newInternal->children[i];
+  				if(i == newInternal->getCount()-1){
+  					//child->setLeftSibling(NULL);
+  				} else{
+  					//child->setLeftSibling(newInternal->children[i - 1]);	
+  					newInternal->children[i-1]->setRightSibling(child);			  		
+  				}	
+  			}
+ 			for(int i = 1; i < getCount()+1; i++){			
+  				BTreeNode* child = children[i];
+  				if(i == getCount()-1){
+  					//child->setLeftSibling(NULL);
+  				} else{
+  					//child->setLeftSibling(newInternal->children[i - 1]);	
+  					children[i-1]->setRightSibling(child);			  		
+  				}	
+  			}
+
   			
 			//cout << "INTERNAL SPLIT COUNT: " << getCount() << endl;
   			//cout << "NEW INTERNAL SPLIT COUNT: " << newInternal->getCount() << endl;
