@@ -146,7 +146,7 @@ void InternalNode::insert(BTreeNode *newNode) // from a sibling
   			//Check if can borrow from left sibling
   			if(leftSibling != NULL){
   	
-  				cout << "Checking left" << endl;		
+  				//cout << "Checking left" << endl;		
   		
 				canInsertLeft = insertLeftSibling(newNode);
 		

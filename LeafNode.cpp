@@ -78,7 +78,7 @@ LeafNode* LeafNode::insert(int value)
  
   	if(leftSibling != NULL){ 	
   	
-  		cout << "Checking left leaf" << endl;		
+  		//cout << "Checking left leaf" << endl;		
   		
 		canInsertLeft = insertLeftSibling(value);
 		
@@ -105,7 +105,7 @@ LeafNode* LeafNode::insert(int value)
   	
   	}
   	
-  	cout << "no adoption" << endl;
+  	//cout << "no adoption" << endl;
   	
   	//Sean's Rule: Right side has more elements than the left side
   	//All leaves need to be AT LEAST half full
@@ -284,17 +284,19 @@ bool LeafNode::insertLeftSibling(int value){
 		//inserts value in temp[]
 		insertSortedArray(temp, value, count);
 		
+		/*
 		cout << "Temp: ";
 		for(int i = 0; i < count+1; i++){
 			cout << temp[i] << " ";
 		}
 		
 		cout << endl;
+		*/
 		
 		//insert smallest value to left
 		leftLeaf->insert(temp[0]);
 		
-		cout << "Count: " << count << endl;
+		//cout << "Count: " << count << endl;
 		
 		//delete smallest value in temp 
 		//this->deleteKey(temp[count]);
