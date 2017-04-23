@@ -46,8 +46,8 @@ LeafNode* LeafNode::insert(int value)
   //Leaf is full, attempt adoption first. If not working then SPLIT
   }else if(count == leafSize){
   	
-  	//SPLIT
-  	cout << "SPLIT" << endl;
+  	//SPLIT LEAF
+  	//cout << "SPLIT LEAF" << endl;
 
 	//checks if value can be inserted in left sibling
 	bool canInsertLeft = true;
@@ -57,9 +57,28 @@ LeafNode* LeafNode::insert(int value)
   	
 	//make method
   	//Check if can borrow from left sibling
-  	if(leftSibling != NULL){
+    
+    
+    
+    
+    /*
+    if (parent != NULL)  {
+  	  InternalNode* parent2 = (InternalNode*)parent;
+  	  
+  	  for(int i = 0; i< parent2->getCount(); i++){
+  	  
+  	  		if(i > 0){
+  	  			parent2->children[i - 1]->setLeftSibling(parent2->children[i]);
+  	  		}
+  	  }
+  	}
+    */
+ 
+ 
+ 
+  	if(leftSibling != NULL){ 	
   	
-  		cout << "Checking left" << endl;		
+  		cout << "Checking left leaf" << endl;		
   		
 		canInsertLeft = insertLeftSibling(value);
 		
@@ -70,9 +89,13 @@ LeafNode* LeafNode::insert(int value)
   		
   	//make method
   	//Check if can borrow from right sibling
-  	}else if(rightSibling != NULL){
+  	} 
+  	
+  	
+  	 
+    if(rightSibling != NULL){
   		
-  		cout << "Checking right" << endl;
+  		//cout << "Checking right" << endl;
   		
   		canInsertRight = insertRightSibling(value);	
   	
@@ -87,10 +110,10 @@ LeafNode* LeafNode::insert(int value)
   	//Sean's Rule: Right side has more elements than the left side
   	//All leaves need to be AT LEAST half full
   	int leftSize = ceil(leafSize / 2.0);
-  	int rightSize = (leafSize + 1) - leftSize;
+  	//int rightSize = (leafSize + 1) - leftSize;
   	
-  	cout << "Left #: " << leftSize << endl;
-  	cout << "Right #: " << rightSize << endl;
+  	//cout << "Left #: " << leftSize << endl;
+  	//cout << "Right #: " << rightSize << endl;
   	
   	//Create temperary array and insert new number into it, then split
   	int* temp = new int[leafSize+1];
@@ -114,10 +137,10 @@ LeafNode* LeafNode::insert(int value)
   	//Set left sibling of new leaf node to current leaf node
   	newLeaf->setLeftSibling(this);
   	
-  	//Set the now empty parts of current leaf node to 0
+  	/*//Set the now empty parts of current leaf node to 0
   	for(int i = leftSize; i < leafSize; i++){
   		values[i] = 0;
-  	}
+  	}*/
   	
   	//Reset count to number of elements after split
   	count = leftSize;
@@ -130,6 +153,7 @@ LeafNode* LeafNode::insert(int value)
   		newLeaf->insert(temp[i]);
   	}
   	
+  	/*
   	cout << "Old Leaf Node: ";
   	
   	for(int i = 0 ; i < count; i++){
@@ -145,13 +169,14 @@ LeafNode* LeafNode::insert(int value)
   	cout << endl;
   	
   	cout << "New Leaf count: " << newLeaf->getCount() << endl;
+  	*/
   	
   	//if it has a parent insert its minimum to parent
   	if(parent != NULL){
-  		cout << "Parent not null" << endl;
+  		//cout << "Parent not null" << endl;
   		parent->insert(this);
-  		cout << "New Leaf" << endl;
-  		parent->insert(newLeaf);
+  		//cout << "New Leaf" << endl;
+  		//parent->insert(newLeaf);
   	}
   	
   	if(newLeaf->parent == NULL){
@@ -274,9 +299,9 @@ bool LeafNode::insertLeftSibling(int value){
 		//delete smallest value in temp 
 		//this->deleteKey(temp[count]);
 		
-		for(int i = 1; i < count+1; i++){
+		for(int i = 0; i < count+1; i++){
 		
-			values[i] = temp[i];
+			values[i] = temp[i + 1];
 		
 		}
 		
@@ -328,17 +353,17 @@ bool LeafNode::insertRightSibling(int value){
 		//inserts value in temp[]
 		insertSortedArray(temp, value, count);
 		
-		cout << "Temp: ";
+		//cout << "Temp: ";
 		for(int i = 0; i < count+1; i++){
-			cout << temp[i] << " ";
+		//	cout << temp[i] << " ";
 		}
 		
-		cout << endl;
+		//cout << endl;
 		
 		//insert largest value to right
 		rightLeaf->insert(temp[count]);
 		
-		cout << "Count: " << count << endl;
+		//cout << "Count: " << count << endl;
 		
 		//delete largest value in temp 
 		//this->deleteKey(temp[count]);
