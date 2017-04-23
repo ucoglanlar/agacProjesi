@@ -26,6 +26,9 @@ InternalNode* InternalNode::insert(int value)
   // students must write this
   
   
+  /*if(parent == NULL){
+  		return;
+  }*/
   
   return NULL; // to avoid warnings for now.
 } // InternalNode::insert()
@@ -62,18 +65,46 @@ void InternalNode::insert(BTreeNode *newNode) // from a sibling
 	
 	int minKey = newNode->getMinimum(); 
   	bool alreadyChild = false;
+  	
+  	cout << "New node: " << newNode << endl;
+  	cout << "Children: ";
+  	
   	//try to update key if already a child
   	for(int i = 0; i < count; i++){
   	
+  		cout << children[i] << " ";
+  	
   		if(newNode == children[i]){
+  			
+  			cout << endl << "Existing child" << endl;
   			keys[i] = minKey;
   			alreadyChild = true;
+  			cout << "Min key: " << minKey << endl;
   		}
   	}
   	
   	if(!alreadyChild){
   	
-  		insert(minKey);
+  		cout << "A new key" << endl;
+  	
+  		//If there is space
+  		if(count < internalSize){
+  			
+  			cout << "Space available" << endl;
+  			 
+  			insertSortedArray(children, keys, newNode, minKey, count);
+  			
+  			
+  			
+  			count++;
+  		
+  		//Needs to split
+  		}else{
+  		
+  		
+  		
+  		}
+  		
   	}
 } // InternalNode::insert()
 
@@ -140,3 +171,50 @@ BTreeNode* InternalNode::find(int value, BTreeNode* start){
 	return start;	
 
 }
+
+/*
+*	Inserts value into an array in a sorted manner, from least to greatest, and returns the index position where the value was inserted
+*	Modifies given array, with the new value inserted
+*	@array: the BTreeNode* array to insert into
+*	@keyArray: array of int keys
+*	@pointer: the BTreeNode pointer to insert into array
+*	@numElements: the current amount of elements in the array
+*	@return: the position in the array the value was inserted
+*/
+int InternalNode::insertSortedArray(BTreeNode** array, int* keyArray, BTreeNode* pointer, int key, int numElements){
+
+	//Add new value in sorted order. Least to Greatest
+  	for(int i = 0; i < numElements; i++){
+  	
+  		if(key < keyArray[i]){
+  			
+  			//shift all elements after the i index to the right
+  			for(int j = numElements; j > i; j--){
+  				
+  				keyArray[j] = keyArray[j-1];
+  				array[j] = array[j-1];
+  			
+  			}
+  		 
+  			//insert value	
+  			keyArray[i] = key;
+  			array[i] = pointer;
+  			
+  			return i;
+  		
+  		//Inserted value is the largest value if at last iteration
+  		}else if(i == numElements - 1){
+  			
+  			//Insert value after the last value inserted
+  			keyArray[numElements] = key;
+			array[numElements] = pointer;  			
+  			
+  			return numElements;
+  		}
+  	
+  	}
+  	
+  	return -1;
+	
+} // InternalNode::insertSortedArray() 
+
