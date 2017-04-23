@@ -18,6 +18,7 @@ public:
   void insert(BTreeNode *newNode); // from a sibling
   void print(Queue <BTreeNode*> &queue);
   BTreeNode* find(int value, BTreeNode* start);
+  int insertSortedArray(BTreeNode** array, int* keyArray, BTreeNode* pointer, int key, int numElements);
 }; // InternalNode class
 
 #endif

@@ -59,6 +59,8 @@ LeafNode* LeafNode::insert(int value)
   	//Check if can borrow from left sibling
   	if(leftSibling != NULL){
   	
+  		cout << "Checking left" << endl;		
+  		
 		canInsertLeft = insertLeftSibling(value);
 		
 		if(canInsertLeft){
@@ -69,6 +71,8 @@ LeafNode* LeafNode::insert(int value)
   	//make method
   	//Check if can borrow from right sibling
   	}else if(rightSibling != NULL){
+  		
+  		cout << "Checking right" << endl;
   		
   		canInsertRight = insertRightSibling(value);	
   	
@@ -144,11 +148,17 @@ LeafNode* LeafNode::insert(int value)
   	
   	//if it has a parent insert its minimum to parent
   	if(parent != NULL){
+  		cout << "Parent not null" << endl;
   		parent->insert(this);
+  		cout << "New Leaf" << endl;
   		parent->insert(newLeaf);
   	}
   	
-  	return newLeaf;
+  	if(newLeaf->parent == NULL){
+  		return newLeaf;
+  	}
+  	
+  	return NULL;
   	
   //Leaf has at least one value and at most leafSize - 1 values (0, leafSize)	
   }else{
@@ -157,10 +167,10 @@ LeafNode* LeafNode::insert(int value)
   	
   	count++;
   	
-  	//if it has a parent insert its minimum to parent
   	if(parent != NULL){
+  	
   		parent->insert(this);
-  		
+  	
   	}
   	
   	return NULL;
@@ -224,41 +234,64 @@ void LeafNode::insertSortedArray(int* array, int value, int numElements){
 */
 bool LeafNode::insertLeftSibling(int value){
 
-	//casts leftSibling to LeafNode
+	//casts rightSibling to LeafNode
 	LeafNode* leftLeaf = (LeafNode*)leftSibling;
 
 	//current count of leftLeaf
-	int currentCount = leftLeaf->count;
+	int leftCount = leftLeaf->count;
 
 	//check if values[] is full in leftLeaf
-	if(currentCount == leafSize){
+	if(leftCount == leafSize){
 		
 		//values[] in leftSibling is full, returns false
 		return false;
 	} else{
 		
 		//temp array
-		int* temp = new int[currentCount + 1];
+		int* temp = new int[count + 1];
 
 		//copy over values in leftLeaf to temp[]
-		for(int i = 0; i < currentCount; i++){
+		for(int i = 0; i < count; i++){
 
-			temp[i] = leftLeaf->values[i];
+			temp[i] = values[i];
 		}
 
 		//inserts value in temp[]
-		insertSortedArray(temp, value, currentCount);
-
+		insertSortedArray(temp, value, count);
+		
+		cout << "Temp: ";
+		for(int i = 0; i < count+1; i++){
+			cout << temp[i] << " ";
+		}
+		
+		cout << endl;
+		
 		//insert smallest value to left
 		leftLeaf->insert(temp[0]);
-
+		
+		cout << "Count: " << count << endl;
+		
 		//delete smallest value in temp 
-		this->deleteKey(temp[0]);
+		//this->deleteKey(temp[count]);
+		
+		for(int i = 1; i < count+1; i++){
+		
+			values[i] = temp[i];
+		
+		}
+		
+		//Update minumum value in parent
+		if(parent != NULL){
+			
+			parent->insert(this);
+			
+		}
 
 	}
 
 	
 	return true;
+
 }
 
 
@@ -274,32 +307,52 @@ bool LeafNode::insertRightSibling(int value){
 	LeafNode* rightLeaf = (LeafNode*)rightSibling;
 
 	//current count of leftLeaf
-	int currentCount = rightLeaf->count;
+	int rightCount = rightLeaf->count;
 
 	//check if values[] is full in leftLeaf
-	if(currentCount == leafSize){
+	if(rightCount == leafSize){
 		
 		//values[] in rightSibling is full, returns false
 		return false;
 	} else{
 		
 		//temp array
-		int* temp = new int[currentCount + 1];
+		int* temp = new int[count + 1];
 
 		//copy over values in leftLeaf to temp[]
-		for(int i = 0; i < currentCount; i++){
+		for(int i = 0; i < count; i++){
 
-			temp[i] = rightLeaf->values[i];
+			temp[i] = values[i];
 		}
 
 		//inserts value in temp[]
-		insertSortedArray(temp, value, currentCount);
-
+		insertSortedArray(temp, value, count);
+		
+		cout << "Temp: ";
+		for(int i = 0; i < count+1; i++){
+			cout << temp[i] << " ";
+		}
+		
+		cout << endl;
+		
 		//insert largest value to right
-		rightLeaf->insert(temp[currentCount]);
-
+		rightLeaf->insert(temp[count]);
+		
+		cout << "Count: " << count << endl;
+		
 		//delete largest value in temp 
-		this->deleteKey(temp[currentCount]);
+		//this->deleteKey(temp[count]);
+		
+		for(int i = 0; i < count; i++){
+		
+			values[i] = temp[i];
+		
+		}
+		
+		
+		
+		
+		
 
 	}
 
