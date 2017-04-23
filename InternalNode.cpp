@@ -32,15 +32,41 @@ InternalNode* InternalNode::insert(int value)
 void InternalNode::insert(BTreeNode *oldRoot, BTreeNode *node2)
 { // Node must be the root, and node1
   // students must write this
+ 
+  	cout << "B" << endl;
+	insert(oldRoot);
+	cout << "C" << endl;
+	insert(node2);
+  
   
   
 } // InternalNode::insert()
 
 void InternalNode::insert(BTreeNode *newNode) // from a sibling
 {
-  // students may write this
-  
-  
+	// students may write this
+	
+	cout << "D" << endl;
+	
+	if(count < internalSize){
+		
+		newNode->setParent(this);
+		cout << "\tE" << endl;
+  		children[count] = newNode;
+  		cout << "\tF" << endl;
+  		keys[count] = newNode->getMinimum();
+  		cout << "\tG" << endl;
+  		
+  		cout << "\tCount: " << count+1 << endl;
+  		cout << "\tKey: " << keys[count] << endl;
+  		
+  		count++;
+		
+		
+		
+	}
+	
+  	
   
 } // InternalNode::insert()
 
