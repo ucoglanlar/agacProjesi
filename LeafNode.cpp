@@ -321,7 +321,7 @@ bool LeafNode::insertLeftSibling(int value){
 		//delete smallest value in temp 
 		//this->deleteKey(temp[count]);
 		
-		for(int i = 0; i < count+1; i++){
+		for(int i = 0; i < count; i++){
 		
 			values[i] = temp[i + 1];
 		

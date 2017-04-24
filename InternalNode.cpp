@@ -78,10 +78,19 @@ void InternalNode::insert(BTreeNode *newNode) // from a sibling
   	
   		if(newNode == children[i]){
   			
+  			if(minKey != keys[i]){
+  				keys[i] = minKey;
+  				
+  				if(parent != NULL){
+  					parent->insert(this);
+  				}
+  						
+  			}
   			//cout << endl << "Existing child" << endl;
-  			keys[i] = minKey;
+  			
   			alreadyChild = true;
   			//cout << "Min key: " << minKey << endl;
+  			return;
   		}
   	}
   	
@@ -94,6 +103,8 @@ void InternalNode::insert(BTreeNode *newNode) // from a sibling
   		
   		//If there is space
   		if(count < internalSize){
+  			
+  			newNode->setParent(this);
   			
   			//cout << "Space available" << endl;
   			 
@@ -224,7 +235,7 @@ void InternalNode::insert(BTreeNode *newNode) // from a sibling
   				newInternal->keys[i-leftSize] = tempKeys[i];
   				newInternal->children[i-leftSize] = tempChildren[i];
   				newInternal->count++;
-  				
+  				tempChildren[i]->setParent(newInternal);
   			}
   			
   			//Set children's parent to new Internal Node
@@ -255,7 +266,7 @@ void InternalNode::insert(BTreeNode *newNode) // from a sibling
   				//cout << "Parent not null" << endl;
   				parent->insert(this);
   				//cout << "New Internal" << endl;
-  				//parent->insert(newInternal);
+  				parent->insert(newInternal);
   			}
   	
   			if(newInternal->parent == NULL){
