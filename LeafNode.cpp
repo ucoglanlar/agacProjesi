@@ -75,6 +75,8 @@ LeafNode* LeafNode::insert(int value)
     */
  
  
+ 	
+ 
  
   	if(leftSibling != NULL){ 	
   	
@@ -92,8 +94,7 @@ LeafNode* LeafNode::insert(int value)
   	} 
   	
   	
-  	 
-    if(rightSibling != NULL){
+  	if(rightSibling != NULL){
   		
   		//cout << "Checking right" << endl;
   		
@@ -103,7 +104,8 @@ LeafNode* LeafNode::insert(int value)
 			return NULL;
 		}
   	
-  	}
+  	} 
+    
   	
   	//cout << "no adoption" << endl;
   	

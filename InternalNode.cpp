@@ -153,6 +153,9 @@ void InternalNode::insert(BTreeNode *newNode) // from a sibling
 			//checks if value can be inserted in right sibling
 			//bool canInsertRight = true;
   	
+		
+			
+			
 			//make method
   			//Check if can borrow from left sibling
   			if(leftSibling != NULL){
@@ -169,21 +172,19 @@ void InternalNode::insert(BTreeNode *newNode) // from a sibling
   			//make method
   			//Check if can borrow from right sibling
   			}
-  			/*
-  			if(rightSibling != NULL){
+  			
+			/*if(rightSibling != NULL){
   		
-  				cout << "Checking right" << endl;
+  				//cout << "Checking right" << endl;
   		
-  				canInsertRight = insertRightSibling(value);	
+  				canInsertRight = insertRightSibling(newNode);	
   	
   				if(canInsertRight){
-					return NULL;
+					return;
 				}
   	
-  			}
-  	
-  			cout << "no adoption" << endl;
-  			*/
+  			}*/  	
+  			
   			
   			//Sean's Rule: Right side has more elements than the left side
   			//All leaves need to be AT LEAST half full
@@ -266,7 +267,7 @@ void InternalNode::insert(BTreeNode *newNode) // from a sibling
   				//cout << "Parent not null" << endl;
   				parent->insert(this);
   				//cout << "New Internal" << endl;
-  				parent->insert(newInternal);
+  				//parent->insert(newInternal);
   			}
   	
   			if(newInternal->parent == NULL){
@@ -388,7 +389,7 @@ BTreeNode* InternalNode::find(int value, BTreeNode* start){
 			}
 		}
 		
-		cout << "ip4" << endl;
+		//cout << "ip4" << endl;
 
 	}
 	//start is the LeafNode

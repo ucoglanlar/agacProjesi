@@ -36,4 +36,3 @@ void BTreeNode::setRightSibling(BTreeNode *right)
 {
   rightSibling = right;
 } // setLeftSibling()
-
