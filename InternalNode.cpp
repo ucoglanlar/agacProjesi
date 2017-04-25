@@ -56,6 +56,9 @@ void InternalNode::insert(BTreeNode *oldRoot, BTreeNode *node2)
   	count++; 
   	node2->setParent(this);
   	
+  	oldRoot->setRightSibling(node2);
+	node2->setLeftSibling(oldRoot);
+  	
   	//cout << "Right done" << endl;
   
   
@@ -379,7 +382,10 @@ BTreeNode* InternalNode::find(int value, BTreeNode* start){
  
 		//traverse through the keys in internal node
 		for(int i = 1; i < currentSize; i++){
-			int temp = keys[i];
+			int temp = ip->keys[i];
+			
+			//cout << "Temp: " << temp << endl;
+			//cout << "Value: " << value << endl;
 
 			//if temp key is greater than or equal to value, traverse child linked to left side of the key
 			//keys in internal node are in increasing order
