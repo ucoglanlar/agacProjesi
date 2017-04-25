@@ -123,7 +123,7 @@ void InternalNode::insert(BTreeNode *newNode) // from a sibling
   			
   				BTreeNode* child = this->children[i];
   				if(i == 0){
-  					//child->setLeftSibling(NULL);
+  					child->setLeftSibling(NULL);
   				}else{
   				
   					child->setLeftSibling(children[i - 1]);		  				
@@ -270,7 +270,7 @@ void InternalNode::insert(BTreeNode *newNode) // from a sibling
   				//cout << "Parent not null" << endl;
   				parent->insert(this);
   				//cout << "New Internal" << endl;
-  				//parent->insert(newInternal);
+  				parent->insert(newInternal);
   			}
   	
   			if(newInternal->parent == NULL){
